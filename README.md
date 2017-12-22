@@ -57,7 +57,7 @@ $ docker run -dt \
     -e NGINX_X_FORWARDED_FOR=true \
     -e MEMCACHED_ENABLED=true \
     -e MEMCACHED_MEM=128m \
-    robostlund/nginx-php-fpm-mysql-static-data:latest
+    robostlund/nginx-php-mysql-static:latest
 ```
 
 ----------
@@ -67,7 +67,7 @@ $ docker run -dt \
       docker_container:
         name: 'www01'
         hostname: www01
-        image: robostlund/nginx-php-fpm-mysql-static-data:latest
+        image: robostlund/nginx-php-mysql-static:latest
         recreate: yes
         pull: true
         ports:
@@ -82,4 +82,3 @@ $ docker run -dt \
           NGINX_X_FORWARDED_FOR: yes
           MEMCACHED_ENABLED: yes
 ```
-
