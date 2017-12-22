@@ -10,5 +10,5 @@ docker run -dt \
     -e MEMCACHED_ENABLED=True \
     -e MEMCACHED_MEM=128m \
     -e MYSQLDUMP_ENABLED=True \
-    robostlund/nginx-php-fpm-mysql-static-data:latest
+    robostlund/nginx-php-mysql-static:latest
 
