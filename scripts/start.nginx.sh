@@ -57,15 +57,13 @@ if [ ! -z $GIT_WEBSITE_REPO ]; then
 
   # do some stuff if git clone was successful
   if [[ $GIT_EXIT_CODE -eq 0 ]]; then
-
     if [ -d /var/www_git/public_html ]; then
       chown -R www-data:www-data /var/www_git/public_html
     fi
 
-    # enable x forwarded from if specified
-    if [ ! -z $NGINX_X_FORWARDED_FOR ]; then
-      sed -i  "s/#real_ip_header/real_ip_header/g" /etc/nginx/sites-available/default
-      sed -i  "s/#set_real_ip_from/set_real_ip_from/g" /etc/nginx/sites-available/default
+    # enable git pull cronjob if specified
+    if [ ! -z $GIT_WEBSITE_CRON_PULL ]; then
+      echo "*/10 * * * * root /usr/local/bin/run.git.pull.sh" > /etc/cron.d/gitpull
     fi
   fi
 
@@ -96,11 +94,12 @@ else
     chown -R www-data:www-data /data/var/www/html/public_html
   fi
 
-  # enable x forwarded from if specified
-  if [ ! -z $NGINX_X_FORWARDED_FOR ]; then
-    sed -i  "s/#real_ip_header/real_ip_header/g" /etc/nginx/sites-available/default
-    sed -i  "s/#set_real_ip_from/set_real_ip_from/g" /etc/nginx/sites-available/default
-  fi
+fi
+
+# enable x forwarded from if specified
+if [ ! -z $NGINX_X_FORWARDED_FOR ]; then
+  sed -i  "s/#real_ip_header/real_ip_header/g" /etc/nginx/sites-available/default
+  sed -i  "s/#set_real_ip_from/set_real_ip_from/g" /etc/nginx/sites-available/default
 fi
 
 nginx -g "daemon off;"

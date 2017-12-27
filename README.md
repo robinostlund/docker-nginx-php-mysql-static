@@ -24,8 +24,9 @@ Multiple processes inside the container managed by supervisord:
  - MEMCACHED_ENABLED: Specify True if you would like to start memcached (default False)
  - MEMCACHED_MEM: Specify memcached memory amount (default 64m)
  - NGINX_X_FORWARDED_FOR: Specify True if you would like to use X-FORWARD-FOR header (default False)
- - GIT_WEBSITE_REPO: specify git repo url here if you want to deploy website from a git repo
- - GIT_WEBSITE_BRANCH: specify git branch here
+ - GIT_WEBSITE_REPO: Specify git repo url here if you want to deploy website from a git repo
+ - GIT_WEBSITE_BRANCH: Specify git branch here
+ - GIT_WEBSITE_CRON_PULL: Specify True if you would like to enable scheduled git pulls that will run every 10 minute.
 
 ----------
 ###### GIT website layout:
@@ -86,6 +87,7 @@ $ docker run -dt \
     -e MEMCACHED_MEM=128m \
     -e GIT_WEBSITE_REPO=https://github.com/robinostlund/demo-website.git \
     -e GIT_WEBSITE_BRANCH=master \
+    -e GIT_WEBSITE_CRON_PULL=true \
     robostlund/nginx-php-mysql-static:latest
 ```
 
@@ -134,4 +136,5 @@ With website from git:
           MEMCACHED_ENABLED: yes
           GIT_WEBSITE_REPO: 'https://github.com/robinostlund/demo-website.git'
           GIT_WEBSITE_BRANCH: 'master'
+          GIT_WEBSITE_CRON_PULL: yes
 ```

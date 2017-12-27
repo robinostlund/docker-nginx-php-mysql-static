@@ -10,4 +10,5 @@ if [ ! -z $GIT_WEBSITE_REPO ]; then
     cd /var/www_git
     git pull -q origin master
   fi
+  chown -R www-data:www-data /var/www_git
 fi
