@@ -34,6 +34,8 @@ If git repo requires a ssh key, put that key in /data/git_key/id_rsa
 - /config/nginx.conf = put your nginx settings here
 - /public_html = put your website data here
 
+You can also trigger git pull from this command: "docker exec <mydockername> /usr/local/bin/run.git.pull.sh"
+
 ----------
 ###### Volume configuration:
 

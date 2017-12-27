@@ -4,11 +4,11 @@
 
 set -x
 
+# create log folder
 if [ ! -d /data/var/log/nginx ]; then
   mkdir -p /data/var/log/nginx
   chown www-data:www-data /data/var/log/nginx
 fi
-
 
 # checkout git repo if specified
 if [ ! -z $GIT_WEBSITE_REPO ]; then
@@ -34,6 +34,7 @@ if [ ! -z $GIT_WEBSITE_REPO ]; then
     chown root:root /root/.ssh/id_rsa
   fi
 
+  # clone git repo
   if [ ! -z $GIT_WEBSITE_BRANCH ]; then
     git clone -b $GIT_WEBSITE_BRANCH $GIT_WEBSITE_REPO /var/www_git
     GIT_EXIT_CODE=$?
@@ -42,8 +43,8 @@ if [ ! -z $GIT_WEBSITE_REPO ]; then
     GIT_EXIT_CODE=$?
   fi
 
+  # do some stuff if git clone was successful
   if [[ $GIT_EXIT_CODE -eq 0 ]]; then
-    rm -rf /var/www_git/.git
 
     if [ -d /var/www_git/public_html ]; then
       chown -R www-data:www-data /var/www_git/public_html

@@ -27,7 +27,6 @@ RUN apt-get update && \
 # modify nginx
 RUN rm -f /etc/nginx/sites-enabled/* && \
     rm -rf /etc/nginx/ssl
-COPY nginx/site.conf /etc/nginx/sites-available/default
 RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && \
     sed -i 's/worker_processes auto;/worker_processes 2;/g' /etc/nginx/nginx.conf && \
     sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
