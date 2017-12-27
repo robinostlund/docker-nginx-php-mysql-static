@@ -43,6 +43,18 @@ if [ ! -z $GIT_WEBSITE_REPO ]; then
     GIT_EXIT_CODE=$?
   fi
 
+  # create nginx config directory if not exists
+  if [ ! -d /var/www_git/config ]; then
+    mkdir -p /var/www_git/config
+    chown www-data:www-data /var/www_git/config
+  fi
+
+  # create nginx config if not exists in git repo from template
+  if [ ! -f /var/www_git/config/nginx.conf ]; then
+    cp /root/nginx/nginx.conf /var/www_git/config/nginx.conf
+    chown www-data:www-data /var/www_git/config/nginx.conf
+  fi
+
   # do some stuff if git clone was successful
   if [[ $GIT_EXIT_CODE -eq 0 ]]; then
 
