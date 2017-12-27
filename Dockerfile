@@ -58,6 +58,7 @@ COPY scripts/* /usr/local/bin/
 RUN chmod +x /usr/local/bin/*
 COPY nginx/index.html /root/nginx/index.html
 COPY nginx/site.conf /root/nginx/site.conf
+COPY nginx/site-git.conf /root/nginx/site-git.conf
 COPY nginx/phpinfo.php /root/nginx/phpinfo.php
 COPY nginx/nginx.conf /root/nginx/nginx.conf
 COPY nginx/logrotate /etc/logrotate.d/nginx

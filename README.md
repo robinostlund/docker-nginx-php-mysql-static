@@ -24,7 +24,14 @@ Multiple processes inside the container managed by supervisord:
  - MEMCACHED_ENABLED: Specify True if you would like to start memcached (default False)
  - MEMCACHED_MEM: Specify memcached memory amount (default 64m)
  - NGINX_X_FORWARDED_FOR: Specify True if you would like to use X-FORWARD-FOR header (default False)
+ - GIT_WEBSITE_REPO: specify git repo url here if you want to deploy website from a git repo
+ - GIT_WEBSITE_BRANCH: specify git branch here
 
+----------
+###### GIT website layout:
+Look at this repository for example (https://github.com/robinostlund/demo-website)
+- /config/nginx.conf = put your nginx settings here
+- /public_html = put your website data here
 
 ----------
 ###### Volume configuration:
@@ -44,6 +51,7 @@ Multiple processes inside the container managed by supervisord:
 
 ----------
 ###### Run example:
+Without website from git:
 ```sh
 $ docker run -dt \
     --name httptest \
@@ -59,9 +67,28 @@ $ docker run -dt \
     -e MEMCACHED_MEM=128m \
     robostlund/nginx-php-mysql-static:latest
 ```
+With website from git:
+```sh
+$ docker run -dt \
+    --name httptest \
+    --hostname httptest \
+    -p 8080:80 \
+    -v /tmp/test:/data \
+    -e MYSQL_DB_NAME=testdb \
+    -e MYSQL_DB_USER=test_user \
+    -e MYSQL_DB_PASS=test_pass \
+    -e MYSQLDUMP_ENABLED=true \
+    -e NGINX_X_FORWARDED_FOR=true \
+    -e MEMCACHED_ENABLED=true \
+    -e MEMCACHED_MEM=128m \
+    -e GIT_WEBSITE_REPO=https://github.com/robinostlund/demo-website.git \
+    -e GIT_WEBSITE_BRANCH=master \
+    robostlund/nginx-php-mysql-static:latest
+```
 
 ----------
 ###### Ansible example:
+Without website from git:
 ```sh
     - name: create container
       docker_container:
@@ -81,4 +108,27 @@ $ docker run -dt \
           MYSQLDUMP_ENABLED: yes
           NGINX_X_FORWARDED_FOR: yes
           MEMCACHED_ENABLED: yes
+```
+With website from git:
+```sh
+    - name: create container
+      docker_container:
+        name: 'www01'
+        hostname: www01
+        image: robostlund/nginx-php-mysql-static:latest
+        recreate: yes
+        pull: true
+        ports:
+          - "8080:80" # http
+        volumes:
+          - '/tmp/data:/data'
+        env:
+          MYSQL_DB_NAME: my_mysql_db
+          MYSQL_USER: my_mysql_user
+          MYSQL_PASSQWORD: my_mysql_password
+          MYSQLDUMP_ENABLED: yes
+          NGINX_X_FORWARDED_FOR: yes
+          MEMCACHED_ENABLED: yes
+          GIT_WEBSITE_REPO: 'https://github.com/robinostlund/demo-website.git'
+          GIT_WEBSITE_BRANCH: 'master'
 ```
