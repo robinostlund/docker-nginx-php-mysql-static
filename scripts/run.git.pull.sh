@@ -1,5 +1,5 @@
 #!/bin/bash
-. /usr/local/bin/sources
+. /usr/local/bin/sources.sh
 
 if [ ! -z $GIT_WEBSITE_REPO ]; then
   # clone git repo
