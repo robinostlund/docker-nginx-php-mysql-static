@@ -30,6 +30,7 @@ Multiple processes inside the container managed by supervisord:
 ----------
 ###### GIT website layout:
 Look at this repository for example (https://github.com/robinostlund/demo-website)
+If git repo requires a ssh key, put that key in /data/git_key/id_rsa
 - /config/nginx.conf = put your nginx settings here
 - /public_html = put your website data here
 
