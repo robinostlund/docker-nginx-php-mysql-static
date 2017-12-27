@@ -12,5 +12,6 @@ docker run -dt \
     -e MYSQLDUMP_ENABLED=True \
     -e GIT_WEBSITE_REPO=https://github.com/robinostlund/demo-website.git \
     -e GIT_WEBSITE_BRANCH=master \
+    -e GIT_WEBSITE_CRON_PULL=True \
     robostlund/nginx-php-mysql-static:latest
 
