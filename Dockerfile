@@ -21,29 +21,31 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
     rm -f /etc/memcached.conf && \
-    rm -rf /var/www
+    rm -rf /var/www && \
 
-##################################################################
-# modify nginx
-RUN rm -f /etc/nginx/sites-enabled/* && \
+    # fix container bug for syslog, by disabling: emerg and imklog
+    sed -i 's/\$KLogPermitNonKernelFacility/#$KLogPermitNonKernelFacility/g' /etc/rsyslog.conf && \
+    sed -i "s|\*.emerg|\#\*.emerg|" /etc/rsyslog.conf && \
+    sed -i 's/$ModLoad imklog/#$ModLoad imklog/' /etc/rsyslog.conf && \
+
+    # modify nginx
+    rm -f /etc/nginx/sites-enabled/* && \
     rm -rf /etc/nginx/ssl
-RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && \
+    ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && \
     sed -i 's/worker_processes auto;/worker_processes 2;/g' /etc/nginx/nginx.conf && \
     sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
-    sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf
+    sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf && \
 
-##################################################################
-# modify mysql
-RUN sed -e "s/^bind-address\(.*\)=.*/bind-address = 0.0.0.0/" -i /etc/mysql/mysql.conf.d/mysqld.cnf && \
+    # modify mysql
+    sed -e "s/^bind-address\(.*\)=.*/bind-address = 0.0.0.0/" -i /etc/mysql/mysql.conf.d/mysqld.cnf && \
     sed 's/datadir.*/datadir=\/data\/var\/lib\/mysql/g' -i /etc/mysql/mysql.conf.d/mysqld.cnf && \
     sed 's/password = .*/password = /g' -i /etc/mysql/debian.cnf && \
     sed 's/^log_error/# log_error/g' -i /etc/mysql/mysql.conf.d/mysqld.cnf && \
     echo "[mysqld]" > /etc/mysql/conf.d/mysql-skip-name-resolv.cnf && \
-    echo "skip_name_resolve" >> /etc/mysql/conf.d/mysql-skip-name-resolv.cnf
+    echo "skip_name_resolve" >> /etc/mysql/conf.d/mysql-skip-name-resolv.cnf && \
 
-##################################################################
-# modify php
-RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/7.0/fpm/php.ini && \
+    # modify php
+    sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/7.0/fpm/php.ini && \
     sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" /etc/php/7.0/fpm/php.ini && \
     sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" /etc/php/7.0/fpm/php.ini && \
     sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php/7.0/fpm/pool.d/www.conf && \
