@@ -30,11 +30,11 @@ RUN apt-get update && \
 
     # modify nginx
     rm -f /etc/nginx/sites-enabled/* && \
-    rm -rf /etc/nginx/ssl
+    rm -rf /etc/nginx/ssl && \
     ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && \
     sed -i 's/worker_processes auto;/worker_processes 2;/g' /etc/nginx/nginx.conf && \
-    sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
-    sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf && \
+    sed -i -e "s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
+    sed -i -e "s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf && \
 
     # modify mysql
     sed -e "s/^bind-address\(.*\)=.*/bind-address = 0.0.0.0/" -i /etc/mysql/mysql.conf.d/mysqld.cnf && \
